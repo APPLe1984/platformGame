@@ -9,6 +9,7 @@ var jumpButton;
 var text;
 var winningMessage;
 var won = false;
+var speed = 10;
 var currentScore = 90;
 var winningScore = 100;
 
@@ -16,12 +17,30 @@ var winningScore = 100;
 function addItems() {
   items = game.add.physicsGroup();
   createItem(375, 300, 'coin');
+  createItem(175, 250, 'coin');
+  createItem(35, 30, 'coin');
+  createItem(455, 400, 'coin');
+  createItem(575, 100, 'badge');
+  createItem(235, 300, 'coin');
+  createItem(135, 100, 'badge');
+  createItem(435, 50, 'coin');
+  createItem(235, 500, 'poison');
+  createItem(235, 550, 'star');
+  createItem(200, 500, 'star');
 }
 
 // add platforms to the game
 function addPlatforms() {
   platforms = game.add.physicsGroup();
   platforms.create(450, 150, 'platform');
+  platforms.create(350, 350, 'platform2');
+  platforms.create(450, 550, 'platform');
+  platforms.create(50, 450, 'platform2');
+  platforms.create(100, 200, 'platform');
+  platforms.create(80, 550, 'platform2');
+  platforms.create(50, 650, 'platform');
+  platforms.create(450, 650, 'platform');
+  platforms.create(50, 80, 'platform2');
   platforms.setAll('body.immovable', true);
 }
 
@@ -43,7 +62,15 @@ function createBadge() {
 // when the player collects an item on the screen
 function itemHandler(player, item) {
   item.kill();
-  currentScore = currentScore + 10;
+  if(item.key==='coin'){
+	  currentScore = currentScore + 10;
+  }else if (item.key==='poison') {
+	  currentScore = currentScore - 10;
+  }else if (item.key==='star') {
+	  currentScore = currentScore + 30;
+  }else if (item.key==='badge') {
+	  speed = speed + 2;
+  }
   if (currentScore === winningScore) {
       createBadge();
   }
@@ -65,11 +92,14 @@ window.onload = function () {
     
     //Load images
     game.load.image('platform', 'platform_1.png');
+    game.load.image('platform2', 'platform_2.png');
     
     //Load spritesheets
     game.load.spritesheet('player', 'chalkers.png', 48, 62);
     game.load.spritesheet('coin', 'coin.png', 36, 44);
     game.load.spritesheet('badge', 'badge.png', 42, 54);
+    game.load.spritesheet('poison', 'poison.png', 32, 32);
+    game.load.spritesheet('star', 'star.png', 32, 32);
   }
 
   // initial game set up
@@ -102,13 +132,13 @@ window.onload = function () {
     // is the left cursor key presssed?
     if (cursors.left.isDown) {
       player.animations.play('walk', 10, true);
-      player.body.velocity.x = -300;
+      player.body.velocity.x = -30*speed;
       player.scale.x = - 1;
     }
     // is the right cursor key pressed?
     else if (cursors.right.isDown) {
       player.animations.play('walk', 10, true);
-      player.body.velocity.x = 300;
+      player.body.velocity.x = 30*speed;
       player.scale.x = 1;
     }
     // player doesn't move
